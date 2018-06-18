@@ -20,12 +20,29 @@ function requestByKey()
         
         curl_setopt($req, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($req, CURLOPT_SSL_VERIFYHOST, false);
+        //curl_exec()执行结果不直接输出，以字符串返回
+        curl_setopt($req, CURLOPT_RETURNTRANSFER, true);
+        
         $data = curl_exec($req);
         curl_close($req);
         return $data;
     }
+echo requestByKey();
+$data =  json_decode(requestByKey());
+$HeWeather6 = $data->HeWeather6;
+$loc = $HeWeather6[0]->update->loc."\t";
+echo $loc;
+$cond_txt = $HeWeather6[0]->now->cond_txt."\t";
+echo $cond_txt;
+$tmp = $HeWeather6[0]->now->tmp."\n";
+echo $tmp;
+echo "Get data: ".$HeWeather6[0]->status."<br />";
 
-$data =  requestByKey();
-echo $data;
+$pf = fopen("weather.log", "a");
+fwrite($pf, $loc);
+fwrite($pf, $cond_txt);
+fwrite($pf, $tmp);
+fclose();
 
 ?>
+
