@@ -38,7 +38,7 @@ $cond_txt = $HeWeather6[0]->now->cond_txt."\t";
 $tmp = $HeWeather6[0]->now->tmp."\n";
 
 $status = $HeWeather6[0]->status;
-$time = 60;
+$time = 60*60;
 if($status == "ok")
 {
     $pf = fopen("weather.log", "a");
@@ -49,7 +49,7 @@ if($status == "ok")
 }
 else
 {
-    $time = 10;
+    $time = 60;
 }
 
 $url = "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
