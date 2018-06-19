@@ -26,23 +26,33 @@ function requestByKey()
         $data = curl_exec($req);
         curl_close($req);
         return $data;
-    }
-echo requestByKey();
+}
+
+$run = include 'switch.php';
+if(!$run) die("process abort");
+
 $data =  json_decode(requestByKey());
 $HeWeather6 = $data->HeWeather6;
 $loc = $HeWeather6[0]->update->loc."\t";
-echo $loc;
 $cond_txt = $HeWeather6[0]->now->cond_txt."\t";
-echo $cond_txt;
 $tmp = $HeWeather6[0]->now->tmp."\n";
-echo $tmp;
-echo "Get data: ".$HeWeather6[0]->status."<br />";
 
-$pf = fopen("weather.log", "a");
-fwrite($pf, $loc);
-fwrite($pf, $cond_txt);
-fwrite($pf, $tmp);
-fclose();
+$status = $HeWeather6[0]->status;
+$time = 60;
+if($status == "ok")
+{
+    $pf = fopen("weather.log", "a");
+    fwrite($pf, $loc);
+    fwrite($pf, $cond_txt);
+    fwrite($pf, $tmp);
+    fclose();
+}
+else
+{
+    $time = 10;
+}
+
+$url = "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+file_get_contents($url);
 
 ?>
-
